@@ -1,0 +1,134 @@
+---
+title: 'Trabalho sobre o indicador Comércio'
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(tidyverse)
+library(WDI)
+
+options(scipen = 999) # REMOVER A NOT. CIENT.
+paises <- c('BR', 'US', 'ZAF', 'CHN', 'MEX', 'CAN', 'DEU', 'JPN')
+# DADOS EM PAINEL
+dadostrade <- WDI(country = paises,
+                indicator = 'NE.TRD.GNFS.ZS', start = 1990, end = 2025)
+
+dadostradebrus <- WDI(country = paises,
+                    indicator = 'NE.TRD.GNFS.ZS')
+
+# CORTE TRANSVERSAL
+dadostrade2023 <- WDI(country = paises,
+                    indicator = 'NE.TRD.GNFS.ZS',
+                    start = 2023, end = 2023)
+
+# SÉRIE TEMPORAL
+dadostradebr <- WDI(country = 'BR',
+                  indicator = 'NE.TRD.GNFS.ZS')
+library(ggplot2)
+
+# Tema bonito
+tema_personalizado <- theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 18),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "gray20"),
+    panel.grid.major = element_line(color = "gray80"),
+    panel.grid.minor = element_blank()
+  )
+
+# Cores
+cor_pontos <- "#000000"
+cor_linha <- "#F00000" 
+```
+
+Nome: Arthur Baeumle Iahn\
+Ciências Econômicas, Terceiro Semestre.
+
+## Comércio (% do PIB)
+
+Comércio é a soma das exportações e importações de bens e serviços, medida como uma participação no produto interno bruto (PIB). Uma observação, como soma-se ambos os valores, ao invés de subtrair importações das exportações, os dados frequentemente serão com valores superiores ao PIB.
+
+O indicador busca mostrar a quantidade monetária que é trocada pelo país, sem mostrar se há lucro ou prejuízo.
+
+## Gráfico com Dados em Painel
+
+-   Comércio crescente da Alemanha, com máximas superiores à 80% do PIB.
+
+-   Estados Unidos mostra um baixo comércio, declarando que não exporta nem importa em quantidades grandes em relação ao seu PIB, o que é produzido no país acaba sendo consumido no próprio país.
+
+-   China e Canadá tiveram seus picos há alguns anos atrás, após disso, entraram em tendência de queda.
+
+-   Brasil com comércio estagnado, subindo apenas a partir de 2020.
+
+-   Outros países, comércio em tendência de alta.
+
+```{r}
+#| label: grafdadosempainel
+#| warning: false
+#| echo: false
+## DADOS EM PAINEL
+grafserieAA <- ggplot(dadostrade, aes(x = year, y = NE.TRD.GNFS.ZS, color = country)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Dados em Painel de Comércio",
+    x = "Ano",
+    y = "Comércio de Bens e Serviços (% PIB)",
+    color = "País"
+  ) +
+  tema_personalizado
+
+print(grafserieAA)
+```
+
+## Gráfico de Dados em Corte Transversal
+
+-   Alemanha líder em comércio. Mais de 80% do PIB, com o tempo, não será surpreendente se passar dos 100%.
+
+-   EUA, Brasil, China e Japão possuem comércios abaixo dos 50% do PIB, indicando forte consumo de suas próprias produções.
+
+```{r}
+#| label: grafdadosemcortetransversal
+#| warning: false
+#| echo: false
+## CORTE TRANSVERSAL
+grafcorte <- ggplot(dadostrade2023, aes(x = reorder(country, NE.TRD.GNFS.ZS), 
+                                        y = NE.TRD.GNFS.ZS, 
+                                        fill = country)) +
+  geom_col(alpha = 0.7) +
+  labs(
+    title = "Corte Transversal: Comércio em 2023",
+    x = "País",
+    y = "Comércio de Bens e Serviços (% PIB)",
+    fill = "País"
+  ) +
+  tema_personalizado +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(grafcorte)
+```
+
+## Gráfico de Dados em Série Temporal
+
+Clara tendência altista para o comércio brasileiro, alta exportação de matérias-primas e forte dependência de industrializados e tecnologias de fora.
+
+```{r}
+#| label: grafdadosemserietemporal
+#| warning: false
+#| echo: false
+## SÉRIE TEMPORAL
+grafserie <- ggplot(dadostradebr, aes(x = year, y = NE.TRD.GNFS.ZS)) +
+  geom_line(color = cor_linha, size = 1.5) +
+  geom_point(color = cor_pontos, size = 2, alpha = 0.8) +
+  labs(
+    title = "Série Temporal: Comércio no Brasil",
+    x = "Ano",
+    y = "Comércio de Bens e Serviços (% PIB)"
+  ) +
+  tema_personalizado
+
+print(grafserie)
+```
