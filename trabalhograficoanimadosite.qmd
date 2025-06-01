@@ -1,0 +1,21 @@
+---
+title: "Títulos detidos por Residentes Total - Emitidos por Residentes Governo Geral"
+format: html
+editor: visual
+---
+
+Arthur Baeumle Iahn, terceiro semestre de 'Ciências Econômicas'.
+
+O indicador apresentado mostra o total de títulos emitidos por partes do Estado Brasileiro, principalmente o tesouro nacional, que estão em posse de residentes do Brasil, sendo pessoas, empresas ou instituições financeiras.
+
+Esse indicador exclui estrangeiros, deixando apenas residentes que operem no Brasil.
+
+Como suas principais funções, podemos atribuir à:
+
+-   Noção de quantos títulos estão em mãos brasileiras, facilitando a absorção dos títulos por parte do governo, caso necessário.
+
+-   Ajuda a medir o quanto de títulos há lá fora, se tiver muitos, o país sofre riscos de choques externos, como calotes de outros países.
+
+A base do indicador inicia em 01/03/2021
+
+![](titulos_pontos_animados.gif)
