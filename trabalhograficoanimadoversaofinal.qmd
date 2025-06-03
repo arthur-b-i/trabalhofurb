@@ -1,0 +1,68 @@
+---
+title: "Títulos detidos por Residentes Total - Emitidos por Residentes Governo Geral"
+format: html
+editor: visual
+---
+
+Arthur Baeumle Iahn, terceiro semestre de 'Ciências Econômicas'.
+
+O indicador apresentado mostra o total de títulos emitidos por partes do Estado Brasileiro, principalmente o tesouro nacional, que estão em posse de residentes do Brasil, sendo pessoas, empresas ou instituições financeiras.
+
+Esse indicador exclui estrangeiros, deixando apenas residentes que operem no Brasil.
+
+Como suas principais funções, podemos atribuir à:
+
+-   Noção de quantos títulos estão em mãos brasileiras, facilitando a absorção dos títulos por parte do governo, caso necessário.
+
+-   Ajuda a medir o quanto de títulos há lá fora, se tiver muitos, o país sofre riscos de choques externos, como calotes de outros países.
+
+A base do indicador inicia em 01/03/2021
+
+```{r}
+#| label: load-packages
+#| include: false
+library(GetBCBData)
+library(tidyverse)
+library(gganimate)
+library(gifski)
+
+# Baixar os dados do BCB
+my.id <- c(titulo = 29447)
+
+df.bcb <- gbcbd_get_series(
+  id = my.id,
+  first.date = '1986-03-06',
+  last.date = Sys.Date(),
+  format.data = 'long',
+  use.memoise = TRUE,
+  cache.path = tempdir(),
+  do.parallel = FALSE
+)
+
+# Ordena por data
+df.bcb <- df.bcb %>% arrange(ref.date)
+
+# Gráfico de pontos com animação
+p <- ggplot(df.bcb, aes(x = ref.date, y = value)) +
+  geom_point(color = "cyan", size = 5) +
+  labs(
+    title = 'Títulos detidos por Residentes - Governo Geral',
+    subtitle = 'Data: {frame_time}',
+    x = 'Ano', y = 'R$ (milhões)'
+  ) +
+  theme_dark() +
+  transition_time(ref.date) +  # mostra ponto a ponto com o tempo
+  shadow_mark(past = TRUE, future = FALSE, alpha = 0.2, size = 5)  # deixa pontos anteriores marcados
+
+```
+
+```{r}
+#| label: grafanimado
+#| warning: false
+#| echo: false
+p
+```
+
+```{r}
+
+```
